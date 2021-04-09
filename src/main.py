@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, People, Planet, Favorite
 #from models import Person
 
 app = Flask(__name__)
@@ -30,14 +30,75 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+# empiezan codigos para USER
 @app.route('/user', methods=['GET'])
-def handle_hello():
+def get_user():
+
+    # response_body = {
+    #     "msg": "Hello, this is your GET /user response "
+    # }
+    user = User.query.all()
+    all_users = list(map(lambda x: x.serialize(), User.query))
+    return jsonify(all_users), 200
+
+@app.route('/user/<int:id>', methods=['GET'])
+def get_userid(id):
+    userid = User.query.get(id)
+    result = userid.serialize()
+    return jsonify(response_body), 200
+
+@app.route('/user', methods=['POST'])
+def create_user():
+
+    request_body_user = request.get_json()
+    newuser = User(name=request_body_user["name"], email=request_body_user["email"], password=request_body_user["password"],is_active=request_body_user["is_active"])
+    db.session.add(newuser)
+    db.session.commit()
+    return jsonify(request_body_user), 200
+
+# empiezan codigos para people
+@app.route('/people', methods=['GET'])
+def get_people():
 
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "msg": "Este es el GET para people "
+    }
+    return jsonify(response_body), 200
+
+@app.route('/people/<int:id>', methods=['GET'])
+def get_peopleid(id):
+    personid = People.query.get(id)
+    result = peopleid.serialize()
+    return jsonify(response_body), 200
+
+# empiezan codigos para planet
+
+@app.route('/planet', methods=['GET'])
+def get_planet():
+
+    response_body = {
+        "msg": "Este es el GET para planets"
     }
 
     return jsonify(response_body), 200
+
+@app.route('/planet/<int:id>', methods=['GET'])
+def get_planetid(id):
+    planetid = Planet.query.get(id)
+    result = planetid.serialize()
+    return jsonify(response_body), 200
+
+# empiezan codigos para Favoritos
+@app.route('/user/<int:id>/favorite', methods=['GET'])
+def get_fav(id):
+    query = User.query.get(id)
+    if query is None:
+        return("El favorito no existe")
+    else:
+        result: Favorite.query.filter_by(user_id= query.id)
+        fav_list = list(map(lambda x: x.serialize(), result))
+        return jsonify(fav_list), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
