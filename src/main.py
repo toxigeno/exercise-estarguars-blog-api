@@ -31,6 +31,7 @@ def sitemap():
     return generate_sitemap(app)
 
 # empiezan codigos para USER
+# get para USER funciona en postman
 @app.route('/user', methods=['GET'])
 def get_user():
 
@@ -41,12 +42,14 @@ def get_user():
     all_users = list(map(lambda x: x.serialize(), User.query))
     return jsonify(all_users), 200
 
+# GET para USER id funciona en postman url/user/numero-elegido
 @app.route('/user/<int:id>', methods=['GET'])
 def get_userid(id):
     userid = User.query.get(id)
     result = userid.serialize()
-    return jsonify(response_body), 200
+    return jsonify(result), 200
 
+# POST para USER funciona en postman
 @app.route('/user', methods=['POST'])
 def create_user():
 
@@ -57,13 +60,16 @@ def create_user():
     return jsonify(request_body_user), 200
 
 # empiezan codigos para people
+# get para people funciona en postman
 @app.route('/people', methods=['GET'])
 def get_people():
 
-    response_body = {
-        "msg": "Este es el GET para people "
-    }
-    return jsonify(response_body), 200
+    # response_body = {
+    #     "msg": "Este es el GET para people "
+    # }
+    people = People.query.all()
+    all_people = list(map(lambda x: x.serialize(), People.query))
+    return jsonify(all_people), 200
 
 @app.route('/people/<int:id>', methods=['GET'])
 def get_peopleid(id):
@@ -76,11 +82,15 @@ def get_peopleid(id):
 @app.route('/planet', methods=['GET'])
 def get_planet():
 
-    response_body = {
-        "msg": "Este es el GET para planets"
-    }
+    # response_body = {
+    #     "msg": "Este es el GET para planets"
+    # }
 
-    return jsonify(response_body), 200
+    # return jsonify(response_body), 200
+
+    planet = Planet.query.all()
+    all_planets = list(map(lambda x: x.serialize(), Planet.query))
+    return jsonify(all_planets), 200
 
 @app.route('/planet/<int:id>', methods=['GET'])
 def get_planetid(id):
@@ -95,7 +105,7 @@ def get_fav(id):
     if query is None:
         return("El favorito no existe")
     else:
-        result: Favorite.query.filter_by(user_id= query.id)
+        result = Favorite.query.filter_by(user_id= query.id)
         fav_list = list(map(lambda x: x.serialize(), result))
         return jsonify(fav_list), 200
 

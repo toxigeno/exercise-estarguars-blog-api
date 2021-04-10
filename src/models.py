@@ -47,9 +47,7 @@ class Planet (db.Model):
             "gravity": self.gravity,
             "population": self.population,
             "climate": self.climate,
-            "surface_water": self.surface_water,
-            "gender": self.gender,
-            # do not serialize the password, its a security breach
+            "surface_water": self.surface_water
         }
 
 class People (db.Model):
@@ -72,7 +70,6 @@ class People (db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "email": self.email,
             "height": self.height,
             "mass": self.mass,
             "hair_color": self.hair_color,
@@ -81,7 +78,6 @@ class People (db.Model):
             "birth_year": self.birth_year,
             "gender": self.gender,
             "homeworld": self.homeworld,
-            # do not serialize the password, its a security breach
         }
 
 class Favorite (db.Model):
