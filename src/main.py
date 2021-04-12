@@ -60,7 +60,7 @@ def create_user():
     return jsonify(request_body_user), 200
 
 # empiezan codigos para people
-# get para people funciona en postman
+# GET para PEOPLE funciona en postman
 @app.route('/people', methods=['GET'])
 def get_people():
 
@@ -71,14 +71,14 @@ def get_people():
     all_people = list(map(lambda x: x.serialize(), People.query))
     return jsonify(all_people), 200
 
+# GEt ID para PEOPLE funciona en postman
 @app.route('/people/<int:id>', methods=['GET'])
 def get_peopleid(id):
-    personid = People.query.get(id)
+    peopleid = People.query.get(id)
     result = peopleid.serialize()
-    return jsonify(response_body), 200
+    return jsonify(result), 200
 
 # empiezan codigos para planet
-
 @app.route('/planet', methods=['GET'])
 def get_planet():
 
@@ -92,11 +92,12 @@ def get_planet():
     all_planets = list(map(lambda x: x.serialize(), Planet.query))
     return jsonify(all_planets), 200
 
+# GEt ID para PLANET funciona en postman
 @app.route('/planet/<int:id>', methods=['GET'])
 def get_planetid(id):
     planetid = Planet.query.get(id)
     result = planetid.serialize()
-    return jsonify(response_body), 200
+    return jsonify(result), 200
 
 # empiezan codigos para Favoritos
 @app.route('/user/<int:id>/favorite', methods=['GET'])
@@ -106,9 +107,8 @@ def get_fav(id):
         return("El favorito no existe")
     else:
         result = Favorite.query.filter_by(user_id= query.id)
-        fav_list = list(map(lambda x: x.serialize(), result))
+        fav_list = list(map(lambda f: f.serialize(), result))
         return jsonify(fav_list), 200
-
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

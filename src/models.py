@@ -12,7 +12,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.email
+        return '<User %r>' % self.name
 
     def serialize(self):
         return {
@@ -47,6 +47,7 @@ class Planet (db.Model):
             "gravity": self.gravity,
             "population": self.population,
             "climate": self.climate,
+            "terrain": self.terrain,
             "surface_water": self.surface_water
         }
 
@@ -77,17 +78,17 @@ class People (db.Model):
             "eye_color": self.eye_color,
             "birth_year": self.birth_year,
             "gender": self.gender,
-            "homeworld": self.homeworld,
+            "homeworld": self.homeworld
         }
 
 class Favorite (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, ForeignKey('user.id'))
     planet_id = db.Column(db.Integer, ForeignKey('planet.id'))
-    person_id = db.Column(db.Integer, ForeignKey('people.id'))
-    planet = db.relationship(Planet)
-    people = db.relationship(People)
+    people_id = db.Column(db.Integer, ForeignKey('people.id'))
     user = db.relationship(User)
+    favorite_character = db.relationship(People)
+    favorite_planet = db.relationship(Planet)
 
     def __repr__(self):
         return '<Favorite %r>' % self.id
@@ -97,8 +98,8 @@ class Favorite (db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "planet_id": self.planet_id,
-            "planet": self.planet,
-            "people": self.people,
+            "people_id": self.people_id,
             "user": self.user,
-            # do not serialize the password, its a security breach
+            "favorite_character": self.favorite_character,
+            "favorite_planet": self.favorite_planet,
         }
