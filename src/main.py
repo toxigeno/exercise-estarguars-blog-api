@@ -100,6 +100,7 @@ def get_planetid(id):
     return jsonify(result), 200
 
 # empiezan codigos para Favoritos
+# GET para FAVORITE según user, funciona en postman
 @app.route('/user/<int:id>/favorite', methods=['GET'])
 def get_fav(id):
     query = User.query.get(id)
@@ -109,6 +110,16 @@ def get_fav(id):
         result = Favorite.query.filter_by(user_id= query.id)
         fav_list = list(map(lambda f: f.serialize(), result))
         return jsonify(fav_list), 200
+
+# POST para FAVORITE de c/USER
+@app.route('/user/<int:id>/favorite', methods=['POST'])
+def create_fav(id):
+
+    solicitud = request.get_json()
+    newfav = Favorite(user=id, favorite_character=solicitud["favorite_character"], favorite_planet=solicitud["favorite_planet"])
+    db.session.add(newfav)
+    db.session.commit()
+    return jsonify("Favorito agregado")
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

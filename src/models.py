@@ -98,8 +98,5 @@ class Favorite (db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "planet_id": self.planet_id,
-            "people_id": self.people_id,
-            "user": self.user,
-            "favorite_character": self.favorite_character,
-            "favorite_planet": self.favorite_planet,
+            "person_id": self.person_id
         }
