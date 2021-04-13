@@ -100,7 +100,7 @@ def get_planetid(id):
     return jsonify(result), 200
 
 # empiezan codigos para Favoritos
-# GET para FAVORITE según user, funciona en postman
+# GET para FAVORITE según USER ID  - funcionando en Postman
 @app.route('/user/<int:id>/favorite', methods=['GET'])
 def get_fav(id):
     query = User.query.get(id)
@@ -111,15 +111,23 @@ def get_fav(id):
         fav_list = list(map(lambda f: f.serialize(), result))
         return jsonify(fav_list), 200
 
-# POST para FAVORITE de c/USER
+# POST para FAVORITE segun USER ID - funcionando en Postman
 @app.route('/user/<int:id>/favorite', methods=['POST'])
 def create_fav(id):
-
     solicitud = request.get_json()
-    newfav = Favorite(user=id, favorite_character=solicitud["favorite_character"], favorite_planet=solicitud["favorite_planet"])
+    newfav = Favorite(user_id=id, people_id=solicitud["people_id"], planet_id=solicitud["planet_id"])
     db.session.add(newfav)
     db.session.commit()
     return jsonify("Favorito agregado")
+
+# DELETE para FAVORITE de un USER
+@app.route('/user/<int:id>/favorite', methods=['DELETE'])
+def delete_fav(id):
+    fav = Favorite.query.get(id)
+    if fav is None:
+        raise APIException('No se encontró el favorito', status_code=404)
+    db.session.delete(fav)
+    db.session.commit()
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
